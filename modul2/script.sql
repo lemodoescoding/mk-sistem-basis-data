@@ -175,7 +175,8 @@ ALTER TABLE Bandara_Penerbangan_Intermediate
   ADD CONSTRAINT PK_Bandara_Penerbangan PRIMARY KEY (Bandara_ID, Penerbangan_ID);
 
 ALTER TABLE Bandara_Penerbangan_Intermediate 
-  ADD CONSTRAINT FK_Bandara_Penerbangan_ID FOREIGN KEY (Bandara_ID) REFERENCES Bandara(ID);
+  ADD CONSTRAINT FK_Bandara_Penerbangan_ID FOREIGN KEY (Bandara_ID) REFERENCES Bandara(ID)
+  ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- 6. Menghapus kolom email di tabel Penumpang
 
@@ -204,7 +205,7 @@ UPDATE Pesawat SET
 -- 10. Delete data di tabel Tiket dengan ID = 'FL0004'
 
 DELETE FROM Tiket
-  WHERE Penerbangan_ID = 'FL0004';
+  WHERE Penerbangan_ID = 'FL0004' AND Penumpang_NIK = '3504156789012345';
 
 -- 11. Delete data di tabel Bagasi dengan ID = 2
 
