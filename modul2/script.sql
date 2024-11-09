@@ -159,22 +159,22 @@ ALTER TABLE Bagasi
   MODIFY Jenis varchar(50);
 
 -- 5. Menambahkan PRIMARY KEY baru di tabel Bandara yakni Kode_IATA
-ALTER TABLE Bandara_Penerbangan_Intermediate
+ALTER TABLE Bandara_Penerbangan_Intermediate 
   DROP CONSTRAINT FK_Bandara_Penerbangan_ID;
 
-ALTER TABLE Bandara_Penerbangan_Intermediate
+ALTER TABLE Bandara_Penerbangan_Intermediate 
   DROP PRIMARY KEY;
 
-ALTER TABLE Bandara
+ALTER TABLE Bandara 
   DROP PRIMARY KEY;
 
-ALTER TABLE Bandara
+ALTER TABLE Bandara 
   ADD CONSTRAINT PK_Bandara PRIMARY KEY (ID, Kode_IATA);
 
-ALTER TABLE Bandara_Penerbangan_Intermediate
+ALTER TABLE Bandara_Penerbangan_Intermediate 
   ADD CONSTRAINT PK_Bandara_Penerbangan PRIMARY KEY (Bandara_ID, Penerbangan_ID);
 
-ALTER TABLE Bandara_Penerbangan_Intermediate
+ALTER TABLE Bandara_Penerbangan_Intermediate 
   ADD CONSTRAINT FK_Bandara_Penerbangan_ID FOREIGN KEY (Bandara_ID) REFERENCES Bandara(ID);
 
 -- 6. Menghapus kolom email di tabel Penumpang
@@ -204,7 +204,7 @@ UPDATE Pesawat SET
 -- 10. Delete data di tabel Tiket dengan ID = 'FL0004'
 
 DELETE FROM Tiket
-  WHERE ID = 'FL0004';
+  WHERE Penerbangan_ID = 'FL0004';
 
 -- 11. Delete data di tabel Bagasi dengan ID = 2
 
