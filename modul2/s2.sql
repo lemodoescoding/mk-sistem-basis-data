@@ -143,10 +143,10 @@ ALTER TABLE borrows
 DROP TABLE phone_numbers;
 
 ALTER TABLE members
-  ADD phone_numbers varchar(13) NOT NULL;
+  ADD phone_number varchar(13) NOT NULL;
 
 ALTER TABLE employees
-  ADD phone_numbers varchar(13) NOT NULL;
+  ADD phone_number varchar(13) NOT NULL;
 
 -- 5.
 INSERT INTO genres (ID, genre_name, description)
@@ -187,7 +187,7 @@ INSERT INTO positions (id, position_name, admin_access)
   ('PS002' ,'Kebersihan' ,False),
   ('PS003' ,'Keamanan' ,False);
 
-INSERT INTO employees (id, name, email, gender, phone_numbers, address, position_id)
+INSERT INTO employees (id, name, email, gender, phone_number, address, position_id)
   VALUES
   ('EM001','Andi Gading','andi@gmail.com', 'P', '081628492610','Jl. Merdeka No.10','PS001'),
   ('EM002', 'Budi Sitombing','budi@gmail.com', 'L', '085864927581','Jl. Sukun Raya No.25','PS003'),
@@ -195,7 +195,7 @@ INSERT INTO employees (id, name, email, gender, phone_numbers, address, position
   ('EM004', 'Lili Sari','lili@gmail.com', 'P', '088385793136','Jl. Cendana No.8','PS002'),
   ('EM005' ,'Alexander Agus','agus@gmail.com', 'L', '088273659814','Jl. Bunga No.12','PS001');
 
-INSERT INTO members (NIK, name, email, gender, address, phone_numbers)
+INSERT INTO members (NIK, name, email, gender, address, phone_number)
   VALUES
   ('3326162409040002', 'Citra Kirana', 'citra@gmail.com','P','Jl. Cinta No.45','088374628921'),
   ('3525017006950028','Jasmine Neroli','jasmine@gmail.com','P','Jl. Melati No.9','083285716164'),
@@ -272,7 +272,7 @@ UPDATE borrows SET
 
 UPDATE borrows
   SET fine = NULL
-  WHERE member_id = '3525017006520020' OR member_id = '3305040901072053';
+  WHERE member_id IN ('3525017006520020','3305040901072053');
 
 -- 9.
 
@@ -290,7 +290,7 @@ UPDATE books SET
 
 -- 10.
 
-INSERT INTO employees (id, name, email, gender, phone_numbers, address, position_id)
+INSERT INTO employees (id, name, email, gender, phone_number, address, position_id)
   VALUES
   ('EM006', 'Aspas Gata', 'aspasgata@gmail.com', 'L', '0895323390308', 'Jl. Badut No.62', 'PS001');
 
