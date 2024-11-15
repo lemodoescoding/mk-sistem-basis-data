@@ -299,7 +299,7 @@ INSERT INTO employees (id, name, email, gender, phone_number, address, position_
 UPDATE employees SET
   name = 'Andi Haki',
   gender = 'L',
-  phone_numbers = '0816348492611'
+  phone_number = '0816348492611'
   WHERE id = 'EM001';
 
 -- 12.
