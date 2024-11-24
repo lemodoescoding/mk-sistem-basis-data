@@ -23,13 +23,15 @@ SELECT * FROM Alumni WHERE A_NRP = (
   FROM Pendataan p 
   JOIN Pendataan_Kegiatan pck ON p.PD_ID = pck.Pendataan_PD_ID 
   JOIN Kegiatan k ON k.ID_Kg = pck.Kegiatan_ID_Kg 
-  WHERE k.ID_Kg = (SELECT ID_Kg FROM Kegiatan WHERE Nama_Kg = 'Seminar Kewirausahaan'));
+  WHERE k.ID_Kg = (SELECT ID_Kg FROM Kegiatan WHERE Nama_Kg = 'Seminar Kewirausahaan')
+);
 
 -- 4.
 SELECT 
-  PD_ID, Admin_P_NIK 
-FROM Pendataan 
-WHERE PD_ID BETWEEN 'PD0010' AND 'PD0015';
+  p.PD_ID, ad.P_Nama, ad.P_NIK
+FROM Pendataan p
+JOIN Admin ad ON ad.P_NIK = p.Admin_P_NIK
+WHERE p.PD_ID BETWEEN 'PD0010' AND 'PD0015';
 
 -- 5.
 SELECT 
