@@ -17,7 +17,7 @@ GROUP BY
   A_ThnLulus;
 
 -- 3.
-SELECT * FROM Alumni WHERE A_NRP = (
+SELECT a.A_NRP, a.A_Nama FROM Alumni a WHERE A_NRP = (
   SELECT 
     p.Alumni_A_NRP
   FROM Pendataan p 
@@ -55,7 +55,6 @@ HAVING COUNT(pck.Kegiatan_ID_Kg) >= 2;
 SELECT 
   ad.P_NIK,
   ad.P_Nama,
-  p.PD_ID
 FROM Pendataan p
 JOIN Admin ad ON p.Admin_P_NIK = ad.P_NIK
 JOIN Alumni a ON p.Alumni_A_NRP = a.A_NRP
