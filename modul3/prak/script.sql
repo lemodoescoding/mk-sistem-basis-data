@@ -1,94 +1,105 @@
 -- 1.
-SELECT 
-  p.Alumni_A_NRP, 
-  a.A_Nama 
-FROM Pendataan p 
-JOIN Alumni a ON a.A_NRP = p.Alumni_A_NRP 
-JOIN Pendataan_Kegiatan pck ON p.PD_ID = pck.Pendataan_PD_ID 
-WHERE (SELECT Nama_Kg FROM Kegiatan WHERE ID_Kg = pck.Kegiatan_ID_Kg) = 'Diskusi Literasi Digital';
+SELECT
+  nama_resepsionis, usia, alamat
+FROM resepsionis
+WHERE jenis_kelamin = 'L'
+ORDER BY usia ASC
+LIMIT 1;
 
 -- 2.
 SELECT 
-  COUNT(*) AS count, 
-  A_ThnLulus 
-FROM Alumni 
-WHERE A_ThnLulus IN (2010, 2012) 
-GROUP BY 
-  A_ThnLulus;
+  p.nama_pelanggan, 
+  o.jumlah_kamar, 
+  GROUP_CONCAT(k.nama_kamar ORDER BY k.nama_kamar) AS nama_kamar 
+FROM `order` o 
+JOIN pelanggan p ON p.NIK = o.pelanggan_NIK 
+JOIN order_kamar ock ON ock.order_id = o.id 
+JOIN kamar k ON k.nomor = ock.kamar_nomor
+WHERE p.nama_pelanggan = 'Daniel Martinez'
+GROUP BY o.id;
 
 -- 3.
-SELECT a.A_NRP, a.A_Nama FROM Alumni a WHERE A_NRP = (
-  SELECT 
-    p.Alumni_A_NRP
-  FROM Pendataan p 
-  JOIN Pendataan_Kegiatan pck ON p.PD_ID = pck.Pendataan_PD_ID 
-  JOIN Kegiatan k ON k.ID_Kg = pck.Kegiatan_ID_Kg 
-  WHERE k.ID_Kg = (SELECT ID_Kg FROM Kegiatan WHERE Nama_Kg = 'Seminar Kewirausahaan')
-);
+SELECT 
+  p.nama_resepsionis, 
+  SUM(jumlah_kamar) as jml_kamar
+FROM resepsionis p
+JOIN `order` o ON p.id = o.resepsionis_id
+GROUP BY
+  p.id
+HAVING jml_kamar > 2;
 
 -- 4.
-SELECT 
-  p.PD_ID, ad.P_Nama, ad.P_NIK
-FROM Pendataan p
-JOIN Admin ad ON ad.P_NIK = p.Admin_P_NIK
-WHERE p.PD_ID BETWEEN 'PD0010' AND 'PD0015';
+SELECT * 
+FROM kamar k
+WHERE k.status = 'Tersedia';
 
 -- 5.
-SELECT 
-  p.Admin_P_NIK, p.PD_ID 
-FROM Pendataan p 
-JOIN Alumni a ON p.Alumni_A_NRP = a.A_NRP 
-WHERE a.A_Pekerjaan = 'Dosen';
+SELECT
+  k.nomor,
+  k.nama_kamar,
+  k.tipe_kamar
+FROM kamar k
+JOIN kamar_fasilitas kcf ON kcf.kamar_nomor = k.nomor
+JOIN fasilitas f ON f.id = kcf.fasilitas_id
+WHERE id = (SELECT id FROM fasilitas WHERE nama = 'Wi-Fi');
 
 -- 6.
-SELECT 
-  p.Alumni_A_NRP, 
-  COUNT(pck.Kegiatan_ID_Kg) AS jml_kegiatan
-FROM Pendataan p 
-JOIN Alumni a ON a.A_NRP = p.Alumni_A_NRP 
-JOIN Pendataan_Kegiatan pck ON p.PD_ID = pck.Pendataan_PD_ID 
-GROUP BY
-  pck.Pendataan_PD_ID
-HAVING COUNT(pck.Kegiatan_ID_Kg) >= 2;
+SELECT
+  COUNT(id) as jml_order,
+  SUM(total_harga) AS total_pendapatan,
+  AVG(total_harga) AS rata_pendapatan
+FROM (
+  SELECT 
+  	o.id AS id,
+    SUM(DATEDIFF(o.tanggal_checkout, o.tanggal_checkin) * k.harga_per_malam) AS total_harga
+  FROM `order` o
+  JOIN order_kamar ock ON ock.order_id = o.id
+  JOIN kamar k ON ock.kamar_nomor = k.nomor
+  GROUP BY
+    o.id
+) AS pendapatan;
 
 -- 7.
-SELECT 
-  ad.P_NIK,
-  ad.P_Nama,
-FROM Pendataan p
-JOIN Admin ad ON p.Admin_P_NIK = ad.P_NIK
-JOIN Alumni a ON p.Alumni_A_NRP = a.A_NRP
-WHERE a.A_Pekerjaan = 
-  (SELECT A_Pekerjaan FROM Alumni WHERE A_Nama = 'Restri Amalia') 
-  AND a.A_NRP <> 
-  (SELECT A_NRP FROM Alumni WHERE A_Nama = 'Restri Amalia');
+SELECT
+  p.NIK AS nik,
+  p.nama_pelanggan AS nama,
+  p.no_telp AS no_telp,
+  k.nomor AS nomor_kamar,
+  k.nama_kamar AS nama_kamar,
+  k.tipe_kamar AS tipe_kamar
+FROM pelanggan p
+JOIN `order` o ON p.NIK = o.pelanggan_NIK
+JOIN pembayaran pb ON o.id = pb.order_id
+JOIN order_kamar ock ON ock.order_id = o.id
+JOIN kamar k ON ock.kamar_nomor = k.nomor
+WHERE pb.status = 'Belum Lunas';
 
 -- 8.
 SELECT
-  A_Pekerjaan AS Pekerjaan,
-  COUNT(*) AS jml_alumni
-FROM Alumni
+  k.nomor,
+  k.nama_kamar,
+  GROUP_CONCAT(f.nama ORDER BY f.nama) AS nama_fasilitas
+FROM kamar k
+JOIN kamar_fasilitas kcf ON k.nomor = kcf.kamar_nomor
+JOIN fasilitas f ON f.id = kcf.fasilitas_id
+WHERE tipe_kamar = 'Deluxe'
 GROUP BY
-  A_Pekerjaan
-ORDER BY jml_alumni DESC;
+  k.nomor;
 
 -- 9.
-SELECT 
-  p.Alumni_A_NRP, 
-  COUNT(pck.Kegiatan_ID_Kg) AS jml_kegiatan
-FROM Pendataan p 
-JOIN Alumni a ON a.A_NRP = p.Alumni_A_NRP 
-JOIN Pendataan_Kegiatan pck ON p.PD_ID = pck.Pendataan_PD_ID 
+SELECT
+  f.nama AS nama_fasilitas,
+  COUNT(f.nama) AS jml_penggunaan
+FROM fasilitas f
+JOIN kamar_fasilitas kcf ON f.id = kcf.fasilitas_id
 GROUP BY
-  pck.Pendataan_PD_ID
-ORDER BY jml_kegiatan DESC;
+  f.nama
+ORDER BY
+  jml_penggunaan DESC;
 
 -- 10.
-SELECT    
-  ad.P_Nama AS Nama_Admin, 
-  COUNT(ad.P_NIK) AS total 
-FROM Admin ad 
-JOIN Admin_Shift ads ON ad.P_NIK = ads.Admin_P_NIK 
-WHERE ad.P_JenisKelamin = 'L'
-GROUP BY 
-  ads.Admin_P_NIK;
+
+SELECT 
+ *
+FROM pelanggan
+WHERE NIK LIKE '12%';
