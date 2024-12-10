@@ -22,7 +22,19 @@ JOIN mahasiswa m ON u.u_id = m.universitas_u_id
 JOIN magang mg ON m.m_nik = mg.mahasiswa_m_nik
 JOIN penilaian p ON mg.penilaian_p_id = p.p_id
 GROUP BY u.u_nama
-ORDER BY rata_rata_kinerja ASC;
+ORDER BY rata_rata_kinerja DESC;
+
+SELECT 
+    u.u_nama AS universitas,
+    COUNT(m.m_nik) AS jumlah_mahasiswa,
+    ROUND(AVG((p.p_aspek_kedisiplinan + p.p_komunikasi + p.p_skill + p.p_laporan) / 4), 2) AS rata_rata_kinerja
+FROM universitas u
+JOIN mahasiswa m ON u.u_id = m.universitas_u_id
+JOIN magang mg ON m.m_nik = mg.mahasiswa_m_nik
+JOIN penilaian p ON mg.penilaian_p_id = p.p_id
+GROUP BY u.u_nama
+ORDER BY rata_rata_kinerja DESC
+LIMIT 1;
 
 -- 3
 SELECT 
